@@ -3,6 +3,9 @@ package com.example.resttest.controllers;
 import com.example.resttest.models.Book;
 import com.example.resttest.models.Response;
 import com.example.resttest.repositories.DatabaseSimulator;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilderDsl;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -46,6 +49,23 @@ public class BookController {
             if(book.getId()==id)
                 res=book;
         }
+        //ATEHOS
+        if(!res.hasLink("all_books")) {
+            Link link1= WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(BookController.class).allBook()).withRel("all_books");
+             res.add(link1);
+        }
+
+        if(!res.hasLink("delete_book")) {
+            Link link1= WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(BookController.class).deleteByID(id)).withRel("delete_book");
+            res.add(link1);
+        }
+
+        if(!res.hasLink("add_book")) {
+            Link link1= WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(BookController.class).addBook(res)).withRel("add_book");
+            res.add(link1);
+        }
+
+
         return res;
     }
 
